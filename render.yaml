@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: rnb-recommender
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SPOTIFY_CLIENT_ID
+        value: 85dd9a9adc224c0b965d1269035a2106
+      - key: SPOTIFY_CLIENT_SECRET
+        value: 721e48d8decc4ff5bef4240d6a4e0d1b
+      - key: SPOTIFY_REDIRECT_URI
+        value: https://r&beats.onrender.com/callback
+      - key: SECRET_KEY
+        value: spottt
+      - key: SCOPE
+        value: user-read-private user-read-email playlist-modify-private playlist-modify-public
