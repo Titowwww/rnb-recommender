@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Playlist</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="dynamic-gradient">
+    <div class="container">
+        <h2>HERE'S YOUR TRACKS</h2>
+
+        <form method="POST" action="/refresh_playlist">
+            <label for="trackCount">How many songs?</label>
+            <select id="trackCount" name="trackCount">
+                <option value="20">20</option>
+                <option value="40">40</option>
+                <option value="60">60</option>
+            </select>
+            <input type="hidden" name="mood" value="{{ mood }}">
+            <button type="submit">Refresh</button>
+        </form>
+        
+        <h3>{{ mood }}</h3>
+
+        <table border="1" style="margin: 0 auto; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px;">Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for track in playlist %}
+                    <tr>
+                        <td style="padding: 8px;"><a href="{{ track['Spotify_Link'] }}" target="_blank">{{ track['Title'] }}</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <form method="POST" action="/save_to_spotify">
+            <input type="hidden" name="mood" value="{{ mood }}">
+            <input type="hidden" name="trackCount" value="{{ trackCount }}">
+            <button type="submit">Add</button>
+        </form>
+    </div>
+</body>
+</html>

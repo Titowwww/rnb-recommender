@@ -1,0 +1,161 @@
+body {
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    overflow-x: hidden; /* 💡 penting agar tidak melar ke samping */
+    max-width: 1920px;
+
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    max-width: 100%;
+    height: 100%;
+}
+
+.page-wrapper {
+    position: relative;
+    height: 100vh;          /* pastikan tinggi pas layar */
+    overflow: hidden;       /* cegah scroll vertikal ekstra */
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    padding-top: 50px;
+}
+
+.container {
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* full screen height */
+    text-align: center;
+}
+.spotify-button {
+    background-color: #1DB954;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 18px;
+}
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+}
+.mood-slider {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+/* Default button mood style */
+.btn-mood {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    color: #333;
+    transition: 0.3s ease;
+    cursor: pointer;
+    border-radius: 30px;
+}
+
+.btn-mood:hover,
+.btn-mood:focus {
+    color: white;
+}
+
+/* Hover / active mood colors */
+.btn-mood.happy:hover,
+.btn-mood.happy:focus {
+    background-color: #ffb347; /* orange-yellow */
+}
+
+.btn-mood.sad:hover,
+.btn-mood.sad:focus {
+    background-color: #4a90e2; /* blue */
+}
+
+.btn-mood.stress:hover,
+.btn-mood.stress:focus {
+    background-color: #e74c3c; /* red */
+}
+
+.btn-mood.chill:hover,
+.btn-mood.chill:focus {
+    background-color: #20c997; /* teal green */
+}
+.dynamic-gradient {
+    background: linear-gradient(-45deg, #6a0dad, #ffffff, #6a0dad);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+    min-height: 100vh;
+}
+
+.btn-logout {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #333333;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+.rotating-disc {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    animation: spin 20s linear infinite;
+    opacity: 0.5;
+    z-index: 0;
+    pointer-events: none;
+}
+.top-right {
+    top: -150px;
+    right: -150px;
+}
+.bottom-left {
+    bottom: -150px;
+    left: -150px;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+#audio-player {
+    display: none;
+}
+

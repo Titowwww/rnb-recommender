@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>R&BEATS - Home</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="dynamic-gradient">
+    <body>
+    <div class="page-wrapper">
+        <img src="/static/images/disc.png" class="rotating-disc top-right" alt="Disc">
+        <img src="/static/images/disc.png" class="rotating-disc bottom-left" alt="Disc">
+
+        <div class="container">
+            <h2>Welcome, {{ user.name }}</h2>
+            <p>Tell us, How's your feeling today?</p>
+
+            <div>
+                <h3>Feel It Zone 🎧</h3>
+                <p>Let your mood guide the music:</p>
+                <button class="btn-mood happy" onclick="selectMood('happy')">Happy</button>
+                <button class="btn-mood sad" onclick="selectMood('sad')">Sad</button>
+                <button class="btn-mood stress" onclick="selectMood('anxious')">Stress</button>
+                <button class="btn-mood chill" onclick="selectMood('calm')">Chill</button>
+            </div>
+
+            <input type="hidden" id="selectedMood" name="mood" value="">
+
+            <div style="margin-top: 40px;">
+                <h3>Fix It Zone 🎧</h3>
+                <p>Let the music heal your mood:</p>
+                <div class="mood-slider">
+                    <button class="btn-mood sad" onclick="selectMood('happy')">Sad</button>
+                    <button class="btn-mood stress" onclick="selectMood('calm')">Stress</button>
+                </div>
+            </div>
+
+            <form method="POST" action="/show_tracks" onsubmit="return validateMoodSelection()">
+                <input type="hidden" id="moodInput" name="mood">
+                <button type="submit">Show me my tracks</button>
+            </form>
+
+            <br><br>
+            <a href="/logout" class="btn-logout">Logout</a>
+        </div>
+    </div>
+
+    <script>
+        function selectMood(mood) {
+            document.getElementById('selectedMood').value = mood;
+            document.getElementById('moodInput').value = mood;
+        }
+    </script>
+
+    <audio id="bgm-player" autoplay muted></audio>
+    <script>
+        const bgmTracks = [
+            "/static/audio/D4L.mp3",
+            "/static/audio/EKOW.mp3",
+            "/static/audio/JM.mp3",
+            "/static/audio/NBY.mp3"
+        ];
+
+        // Shuffle playlist
+        const shuffled = bgmTracks.sort(() => 0.5 - Math.random());
+        let currentTrack = 0;
+
+        const player = document.getElementById('bgm-player');
+
+        function playNext() {
+            player.src = shuffled[currentTrack];
+            player.muted = false; // Unmute setelah autoplay diizinkan
+            player.play().catch(e => console.log("Autoplay blocked:", e));
+            currentTrack = (currentTrack + 1) % shuffled.length;
+        }
+
+        // Jalankan saat user klik pertama kali
+        document.addEventListener('click', function handleUserInteraction() {
+            playNext();
+            document.removeEventListener('click', handleUserInteraction); // hanya sekali
+        });
+
+        // Lanjutkan otomatis ke lagu berikutnya
+        player.addEventListener('ended', playNext);
+
+        function validateMoodSelection() {
+            const mood = document.getElementById('moodInput').value;
+            if (!mood) {
+                alert("Choose your preferences by mood first...");
+                return false; // cegah form dikirim
+            }
+            return true;
+        }
+    </script>
+
+
+</body>
+</html>
