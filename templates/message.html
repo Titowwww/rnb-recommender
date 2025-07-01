@@ -5,6 +5,7 @@
     <script>
         window.onload = function() {
             alert("{{ message }}");
+            window.location.href = "/show_tracks?mood={{ mood }}&trackCount={{ trackCount }}";// redirect kembali ke showed.html
         }
     </script>
 </head>
