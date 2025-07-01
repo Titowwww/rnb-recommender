@@ -22,18 +22,16 @@ SCOPE = "user-read-private user-read-email playlist-modify-private playlist-modi
 
 CSV_PATH = 'data/rnb_with_spotify_links.csv'  # pastikan file CSV kamu ada di path ini
 
-def get_country_from_spotify(track_id, token):
+def get_artist_from_spotify(track_id, token):
     url = f"https://api.spotify.com/v1/tracks/{track_id}"
     headers = {"Authorization": f"Bearer {token}"}
     r = requests.get(url, headers=headers)
     if r.status_code == 200:
         data = r.json()
-        markets = data.get("available_markets", [])
-        if "ID" in markets:
-            return "ID"
-        elif "US" in markets:
-            return "US"
-    return "Other"
+        artists = data.get("artists", [])
+        if artists:
+            return ", ".join(artist["name"] for artist in artists)
+    return "Unknown"
 
 @app.route("/")
 def login():
@@ -105,12 +103,24 @@ def show_tracks():
         return redirect(url_for("login"))
 
     mood = request.form.get("mood") or request.args.get("mood")
-    track_count = int(request.form.get("trackCount") or request.args.get("trackCount") or 20)
+    track_count = int(request.form.get("trackCount") or request.args.get("trackCount") or 5)
 
     df = pd.read_csv(CSV_PATH)
     df_mood = df[df["Mood"].str.lower() == mood.lower()]
 
-    playlist = df_mood.sample(n=min(track_count, len(df_mood))).to_dict(orient="records")
+    sampled_tracks = df_mood.sample(n=min(track_count, len(df_mood))).to_dict(orient="records")
+    access_token = session.get("access_token")
+    playlist = []
+
+    for track in sampled_tracks:
+        try:
+            spotify_link = track["Spotify_Link"]
+            track_id = spotify_link.split("/")[-1].split("?")[0]
+            artist_name = get_artist_from_spotify(track_id, access_token)
+            track["Artist"] = artist_name
+        except:
+            track["Artist"] = "Unknown"
+        playlist.append(track)
 
     session["playlist"] = playlist
     session["mood"] = mood
@@ -122,11 +132,16 @@ def show_tracks():
 def refresh_playlist():
     mood = request.form.get("mood")
     track_count = request.form.get("trackCount")
+
+    session["mood"]=mood
+    session["trackcount"]=track_count
     return redirect(url_for("show_tracks", mood=mood, trackCount=track_count))
 
 @app.route("/save_to_spotify", methods=["POST"])
 def save_to_spotify():
     if "user" not in session or "access_token" not in session:
+        session["trackCount"] = session.get("trackCount") or 5
+        session["mood"] = session.get("mood")
         return redirect(url_for("login"))
 
     playlist_data = session.get("playlist")
@@ -175,7 +190,12 @@ def save_to_spotify():
         )
 
         if add_response.status_code == 201:
-            return render_template("message.html", message="Playlist berhasil disimpan ke akun Spotify!")
+             return render_template(
+            "message.html",
+            message="Playlist berhasil disimpan ke akun Spotify!",
+            mood=session['mood'],
+            trackCount=session['trackCount']
+            )
         else:
             return render_template("message.html", message="Gagal menambahkan lagu ke playlist.")
     else:
