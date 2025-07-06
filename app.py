@@ -207,4 +207,5 @@ def logout():
     return redirect(url_for("login"))  # langsung ke Spotify login
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    from werkzeug.serving import run_simple
+    run_simple("localhost", 5000, app)
