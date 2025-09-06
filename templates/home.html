@@ -13,7 +13,75 @@
         <div class="container">
             <h2>Welcome, {{ user.name }}</h2>
             <p>Tell us, How's your feeling today?</p>
-
+            <div style="
+                background-color: #000;      /* hitam */
+                border-radius: 16px;        /* roundy */
+                padding: 20px;
+            ">
+                <h3 style="text-align:center; color: #fff;">
+                    Tren Suasana Hati Lagu R&B Berdasarkan Tahun
+                </h3>
+                <canvas id="moodChart" style="max-height:300px;"></canvas>
+                <script>
+                async function loadMoodTrend() {
+                    const response = await fetch("/mood_trend");
+                    const data = await response.json();
+        
+                    // min max tahun
+                    const allYearsRaw = Object.values(data).flat().map(d => d.Year);
+                    const minYear = Math.min(...allYearsRaw);
+                    const maxYear = Math.max(...allYearsRaw);
+        
+                    // Buat range tahun (misal step 10 tahun)
+                    const allYears = [];
+                    for (let y = minYear; y <= maxYear; y += 10) {
+                        allYears.push(y);
+                    }
+                    
+                    // Dataset per mood
+                    const datasets = Object.keys(data).map(mood => {
+                        const moodMap = {};
+                        data[mood].forEach(d => moodMap[d.Year] = d.Count);
+        
+                        return {
+                            label: mood,
+                            data: allYears.map(y => moodMap[y] || 0), // isi 0 kalau ga ada
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.3
+                        };
+                    });
+        
+                    new Chart(document.getElementById("moodChart"), {
+                        type: 'line',
+                        data: {
+                            labels: allYears,
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            },
+                            scales: {
+                               x: {
+                                    title: { display: true, text: 'Tahun' },
+                                    ticks: { stepSize: 10 } // jaga step tetap 10 tahun
+                                },
+                                y: {
+                                    title: { display: true, text: 'Jumlah Lagu' },
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+        
+                loadMoodTrend();
+                </script>
+            </div>
             <div>
                 <h3>Feel It Zone 🎧</h3>
                 <p>Let your mood guide the music:</p>
@@ -93,69 +161,5 @@
             return true;
         }
     </script>
-
-    <div style="width:500%; max-width:400px; margin:20px auto;">
-        <h3 style="text-align:center;">Tren Suasana Hati Lagu R&B Berdasarkan Tahun</h3>
-        <canvas id="moodChart" style="max-height:300px;"></canvas>
-        <script>
-        async function loadMoodTrend() {
-            const response = await fetch("/mood_trend");
-            const data = await response.json();
-
-            // min max tahun
-            const allYearsRaw = Object.values(data).flat().map(d => d.Year);
-            const minYear = Math.min(...allYearsRaw);
-            const maxYear = Math.max(...allYearsRaw);
-
-            // Buat range tahun (misal step 10 tahun)
-            const allYears = [];
-            for (let y = minYear; y <= maxYear; y += 10) {
-                allYears.push(y);
-            }
-            
-            // Dataset per mood
-            const datasets = Object.keys(data).map(mood => {
-                const moodMap = {};
-                data[mood].forEach(d => moodMap[d.Year] = d.Count);
-
-                return {
-                    label: mood,
-                    data: allYears.map(y => moodMap[y] || 0), // isi 0 kalau ga ada
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3
-                };
-            });
-
-            new Chart(document.getElementById("moodChart"), {
-                type: 'line',
-                data: {
-                    labels: allYears,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    },
-                    scales: {
-                       x: {
-                            title: { display: true, text: 'Tahun' },
-                            ticks: { stepSize: 10 } // jaga step tetap 10 tahun
-                        },
-                        y: {
-                            title: { display: true, text: 'Jumlah Lagu' },
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        loadMoodTrend();
-        </script>
-    </div>
 </body>
 </html>
