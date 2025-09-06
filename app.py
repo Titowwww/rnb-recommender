@@ -24,17 +24,6 @@ SCOPE = "user-read-private user-read-email playlist-modify-private playlist-modi
 
 CSV_PATH = 'data/rnb_with_spotify_links.csv'  # pastikan file CSV kamu ada di path ini
 
-def get_artist_from_spotify(track_id, token):
-    url = f"https://api.spotify.com/v1/tracks/{track_id}"
-    headers = {"Authorization": f"Bearer {token}"}
-    r = requests.get(url, headers=headers)
-    if r.status_code == 200:
-        data = r.json()
-        artists = data.get("artists", [])
-        if artists:
-            return ", ".join(artist["name"] for artist in artists)
-    return "Unknown"
-
 @app.route("/")
 def login():
     return render_template("login.html")
