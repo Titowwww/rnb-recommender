@@ -17,6 +17,7 @@
                 background-color: #000;      /* hitam */
                 border-radius: 16px;        /* roundy */
                 padding: 20px;
+                margin-bottom: 30px; /* kasih jarak biar ga nabrak konten bawah */
             ">
                 <h3 style="text-align:center; color: #fff;">
                     Tren Suasana Hati Lagu R&B Berdasarkan Tahun
@@ -27,14 +28,8 @@
                     const response = await fetch("/mood_trend");
                     const data = await response.json();
         
-                    // min max tahun
-                    const allYearsRaw = Object.values(data).flat().map(d => d.Year);
-                    const minYear = Math.min(...allYearsRaw);
-                    const maxYear = Math.max(...allYearsRaw);
-        
-                    // Buat range tahun (misal step 10 tahun)
                     const allYears = [];
-                    for (let y = minYear; y <= maxYear; y += 10) {
+                    for (let y = 1905; y <= 2024; y += 25) {
                         allYears.push(y);
                     }
                     
