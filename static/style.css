@@ -16,9 +16,9 @@ html, body {
 }
 
 .page-wrapper {
-    position: relative;
-    height: 100vh;          /* pastikan tinggi pas layar */
-    overflow: hidden;       /* cegah scroll vertikal ekstra */
+    overflow-y: auto;  /* biar bisa discroll */
+    height: auto;      /* jangan fixed */
+    min-height: 100vh; /* biar penuh */
 }
 
 .container {
