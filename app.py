@@ -1,6 +1,8 @@
 import os
 import requests
 import pandas as pd
+import json
+from flask import jsonify
 from flask import Flask, redirect, request, session, url_for, render_template
 from dotenv import load_dotenv
 from urllib.parse import urlencode
@@ -44,7 +46,7 @@ def spotify_login():
         "response_type": "code",
         "redirect_uri": SPOTIFY_REDIRECT_URI,
         "scope": SCOPE,
-        "show_dialog": "true"  # Penting agar user bisa login ulang atau ganti akun
+        "show_dialog": "true"
     })
     return redirect(f"{AUTH_URL}?{query_params}")
 
@@ -96,6 +98,23 @@ def home():
     if "user" not in session:
         return redirect(url_for("login"))
     return render_template("home.html", user=session["user"])
+
+@app.route("/mood_trend")
+def mood_trend():
+    df = pd.read_csv(CSV_PATH)
+
+    # pastikan release date berupa tahun saja
+    df['Year'] = pd.to_datetime(df['Release Date'], errors='coerce').dt.year
+
+    grouped = df.groupby(['Year', 'Mood']).size().reset_index(name='Count')
+
+    # Ubah format ke dict per mood → { "happy": [...], "sad": [...], ... }
+    result = {}
+    for mood in grouped['Mood'].unique():
+        mood_data = grouped[grouped['Mood'] == mood][['Year', 'Count']].to_dict(orient='records')
+        result[mood] = mood_data
+
+    return jsonify(result)
 
 @app.route("/show_tracks", methods=["GET", "POST"])
 def show_tracks():
