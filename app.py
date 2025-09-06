@@ -123,38 +123,57 @@ def show_tracks():
 
     mood = request.form.get("mood") or request.args.get("mood")
     track_count = int(request.form.get("trackCount") or request.args.get("trackCount") or 5)
+    year_range = request.form.get("yearRange") or request.args.get("yearRange") or "all"
 
     df = pd.read_csv(CSV_PATH)
+
+    # pastikan ada kolom Year
+    df['Year'] = pd.to_datetime(df['Release Date'], errors='coerce').dt.year
+
+    # filter mood
     df_mood = df[df["Mood"].str.lower() == mood.lower()]
 
+    # filter tahun sesuai dropdown
+    if year_range != "all":
+        start, end = map(int, year_range.split("-"))
+        df_mood = df_mood[(df_mood["Year"] >= start) & (df_mood["Year"] <= end)]
+
+    # sampling lagu
     sampled_tracks = df_mood.sample(n=min(track_count, len(df_mood))).to_dict(orient="records")
-    access_token = session.get("access_token")
+
+    # langsung ambil Artist dari dataset (tidak lagi dari Spotify API)
     playlist = []
-
     for track in sampled_tracks:
-        try:
-            spotify_link = track["Spotify_Link"]
-            track_id = spotify_link.split("/")[-1].split("?")[0]
-            artist_name = get_artist_from_spotify(track_id, access_token)
-            track["Artist"] = artist_name
-        except:
-            track["Artist"] = "Unknown"
-        playlist.append(track)
+        playlist.append({
+            "Artist": track.get("Artist", "Unknown"),
+            "Title": track.get("Title", "Untitled"),
+            "Spotify_Link": track.get("Spotify_Link", "#")
+        })
 
+    # simpan ke session
     session["playlist"] = playlist
     session["mood"] = mood
     session["trackCount"] = track_count
+    session["yearRange"] = year_range
 
-    return render_template("showed.html", playlist=playlist, mood=mood, trackCount=track_count)
+    return render_template(
+        "showed.html",
+        playlist=playlist,
+        mood=mood,
+        trackCount=track_count,
+        yearRange=year_range
+    )
 
 @app.route("/refresh_playlist", methods=["POST"])
 def refresh_playlist():
     mood = request.form.get("mood")
     track_count = request.form.get("trackCount")
+    year_range = request.form.get("yearRange")
 
-    session["mood"]=mood
-    session["trackcount"]=track_count
-    return redirect(url_for("show_tracks", mood=mood, trackCount=track_count))
+    session["mood"] = mood
+    session["trackCount"] = track_count
+    session["yearRange"] = year_range
+    return redirect(url_for("show_tracks", mood=mood, trackCount=track_count, yearRange=year_range))
 
 @app.route("/save_to_spotify", methods=["POST"])
 def save_to_spotify():
