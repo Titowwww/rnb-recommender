@@ -98,7 +98,10 @@
         }
     </script>
 
- <script>
+    <div style="width:60%; max-width:500px; margin:30px auto;">
+        <h3 style="text-align:center;">Tren Suasana Hati Lagu R&B Berdasarkan Tahun</h3>
+        <canvas id="moodChart" style="max-height:300px;"></canvas>
+        <script>
         async function loadMoodTrend() {
             const response = await fetch("/mood_trend");
             const data = await response.json();
@@ -153,6 +156,7 @@
         }
 
         loadMoodTrend();
-    </script>
+        </script>
+    </div>
 </body>
 </html>
