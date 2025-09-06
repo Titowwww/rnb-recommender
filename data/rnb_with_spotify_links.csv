@@ -1,4 +1,4 @@
-Title,Artist,Release Date,Year,Popularity,Track ID,Valence,Energy,Danceability,Loudness,Acousticness,Spotify_links,Cluster,Mood
+Title,Artist,Release Date,Year,Popularity,Track ID,Valence,Energy,Danceability,Loudness,Acousticness,Spotify_Link,Cluster,Mood
 Pink + White,Frank Ocean,8/20/2016,2016,87,3xKsf9qdS1CyvXSMEid6g8,0.549,0.545,0.545,-7.362,0.667,https://open.spotify.com/track/3xKsf9qdS1CyvXSMEid6g8,1,Calm
 Get You (feat. Kali Uchis),Daniel Caesar,8/25/2017,2017,82,7zFXmv6vqI4qOt4yGf3jYZ,0.358,0.294,0.658,-8.533,0.422,https://open.spotify.com/track/7zFXmv6vqI4qOt4yGf3jYZ,2,Sad
 Poison,Brent Faiyaz,8/3/2016,2016,78,5NijSs5dAwaIybq1GaRTIe,0.382,0.394,0.689,-10.102,0.711,https://open.spotify.com/track/5NijSs5dAwaIybq1GaRTIe,2,Sad
@@ -2707,3 +2707,4 @@ Be My Escape,Relient K,11/2/2004,2004,0,5GhYfK0jevTEtXOaqCKCxw,0.244,0.865,0.551
 A Favor House Atlantic,Coheed and Cambria,3/30/2003,2003,56,4KliQFRlvNKnlVYzMMbSMq,0.144,0.97,0.294,-4.942,0.000706,https://open.spotify.com/track/4KliQFRlvNKnlVYzMMbSMq,0,Anxious
 Welcome to My Life,Simple Plan,10/25/2004,2004,58,714Lw0m2SmCEhKSPw0Dn8J,0.491,0.858,0.421,-4.535,0.0134,https://open.spotify.com/track/714Lw0m2SmCEhKSPw0Dn8J,0,Anxious
 In Too Deep,Sum 41,1/1/2001,2001,75,1HNE2PX70ztbEl6MLxrpNL,0.76,0.843,0.569,-5.875,0.000189,https://open.spotify.com/track/1HNE2PX70ztbEl6MLxrpNL,3,Happy
+
