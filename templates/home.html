@@ -50,7 +50,13 @@
             document.getElementById('moodInput').value = mood;
         }
     </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<div style="width:80%; margin:50px auto;">
+    <h3>Tren Suasana Hati Lagu R&B Berdasarkan Tahun</h3>
+    <canvas id="moodChart"></canvas>
+</div>
     <audio id="bgm-player" autoplay muted></audio>
     <script>
         const bgmTracks = [
@@ -92,6 +98,61 @@
         }
     </script>
 
+ <script>
+        async function loadMoodTrend() {
+            const response = await fetch("/mood_trend");
+            const data = await response.json();
 
+            // Ambil semua tahun unik
+            const allYears = [...new Set(Object.values(data).flat().map(d => d.Year))].sort();
+
+            // Dataset untuk tiap mood
+            const datasets = Object.keys(data).map(mood => {
+                const moodMap = {};
+                data[mood].forEach(d => moodMap[d.Year] = d.Count);
+
+                return {
+                    label: mood,
+                    data: allYears.map(y => moodMap[y] || 0), // isi 0 kalau ga ada
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
+                };
+            });
+
+            new Chart(document.getElementById("moodChart"), {
+                type: 'line',
+                data: {
+                    labels: allYears,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tahun'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Jumlah Lagu'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        loadMoodTrend();
+    </script>
 </body>
 </html>
