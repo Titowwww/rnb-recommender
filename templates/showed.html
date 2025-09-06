@@ -16,6 +16,19 @@
                 <option value="40">40</option>
                 <option value="60">60</option>
             </select>
+
+            <!-- Filter Year -->
+            <label for="yearRange">Year Range:</label>
+            <select id="yearRange" name="yearRange">
+                <option value="all">All</option>
+                <option value="1905-1940">1905 - 1940</option>
+                <option value="1941-1985">1941 - 1985</option>
+                <option value="1986-2000">1986 - 2000</option>
+                <option value="2001-2010">2001 - 2010</option>
+                <option value="2011-2020">2011 - 2020</option>
+                <option value="2021-2025">2021 - 2025</option>
+            </select>
+
             <input type="hidden" name="mood" value="{{ mood }}">
             <button type="submit">Refresh</button>
         </form>
@@ -33,16 +46,18 @@
                 {% for track in playlist %}
                     <tr>
                         <td style="padding: 8px;">{{ track['Artist'] }}</td>
-                        <td style="padding: 8px;"><a href="{{ track['Spotify_Link'] }}" target="_blank">{{ track['Title'] }}</a></td>
+                        <td style="padding: 8px;">
+                            <a href="{{ track['Spotify_Link'] }}" target="_blank">{{ track['Title'] }}</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-
         <form method="POST" action="/save_to_spotify">
             <input type="hidden" name="mood" value="{{ mood }}">
             <input type="hidden" name="trackCount" value="{{ trackCount }}">
+            <input type="hidden" name="yearRange" value="{{ yearRange }}">
             <button type="submit">Add</button>
         </form>
     </div>
