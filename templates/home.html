@@ -17,7 +17,7 @@
                 background-color: #000;      /* hitam */
                 border-radius: 16px;        /* roundy */
                 padding: 20px;
-                margin-bottom: 30px; /* kasih jarak biar ga nabrak konten bawah */
+                margin-bottom: 30px; /* kasih jarak */
             ">
                 <h3 style="text-align:center; color: #fff;">
                     Tren Suasana Hati Lagu R&B Berdasarkan Tahun
@@ -27,30 +27,37 @@
                 async function loadMoodTrend() {
                     const response = await fetch("/mood_trend");
                     const data = await response.json();
-        
-                    const allYears = [];
-                    for (let y = 1905; y <= 2024; y += 25) {
-                        allYears.push(y);
-                    }
-                    
+                
+                    // Definisikan rentang tahun (bin)
+                    const bins = [
+                        { label: 1905, start: 0, end: 1905 },
+                        { label: 1940, start: 1906, end: 1940 },
+                        { label: 1975, start: 1941, end: 1975 },
+                        { label: 2000, start: 1976, end: 2000 },
+                        { label: 2010, start: 2001, end: 2010 },
+                        { label: 2020, start: 2011, end: 2020 },
+                        { label: 2024, start: 2021, end: 2024 }
+                    ];
+                
                     // Dataset per mood
                     const datasets = Object.keys(data).map(mood => {
-                        const moodMap = {};
-                        data[mood].forEach(d => moodMap[d.Year] = d.Count);
-        
                         return {
                             label: mood,
-                            data: allYears.map(y => moodMap[y] || 0), // isi 0 kalau ga ada
+                            data: bins.map(bin => {
+                                return data[mood]
+                                    .filter(d => d.Year >= bin.start && d.Year <= bin.end)
+                                    .reduce((sum, d) => sum + d.Count, 0);
+                            }),
                             borderWidth: 2,
                             fill: false,
                             tension: 0.3
                         };
                     });
-        
+                
                     new Chart(document.getElementById("moodChart"), {
                         type: 'line',
                         data: {
-                            labels: allYears,
+                            labels: bins.map(b => b.label),
                             datasets: datasets
                         },
                         options: {
@@ -62,8 +69,7 @@
                             },
                             scales: {
                                x: {
-                                    title: { display: true, text: 'Tahun' },
-                                    ticks: { stepSize: 10 } // jaga step tetap 10 tahun
+                                    title: { display: true, text: 'Tahun' }
                                 },
                                 y: {
                                     title: { display: true, text: 'Jumlah Lagu' },
@@ -73,7 +79,7 @@
                         }
                     });
                 }
-        
+                
                 loadMoodTrend();
                 </script>
             </div>
