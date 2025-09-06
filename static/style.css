@@ -16,9 +16,9 @@ html, body {
 }
 
 .page-wrapper {
-    overflow-y: auto;  /* biar bisa discroll */
-    height: auto;      /* jangan fixed */
-    min-height: 100vh; /* biar penuh */
+    min-height: 100vh;
+    overflow-x: hidden;   /* cegah geser kanan */
+    overflow-y: auto;     /* scroll hanya vertikal */
 }
 
 .container {
@@ -56,6 +56,12 @@ button {
     font-size: 16px;
     border-radius: 30px;
     border: none;
+}
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
 }
 .mood-slider {
     display: flex;
