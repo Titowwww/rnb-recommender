@@ -22,7 +22,7 @@ USER_PROFILE_URL = "https://api.spotify.com/v1/me"
 
 SCOPE = "user-read-private user-read-email playlist-modify-private playlist-modify-public"
 
-CSV_PATH = 'data/rnb_with_spotify_links.csv'  # pastikan file CSV kamu ada di path ini
+CSV_PATH = 'data/rnb_with_spotify_links.csv'  
 
 @app.route("/")
 def login():
